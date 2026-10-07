@@ -2,7 +2,7 @@
 
 **Primary guideline:** [question.txt](question.txt). Read it before implementation and before final review. This plan translates that brief into a small project; it does not replace it.
 
-**Status:** planning complete; application development and testing have not started.
+**Status:** application implemented; build, lint, type checks, unit/API tests, and browser tests passed. Live AI output evaluation remains pending credentials.
 **Scope:** one day, one page, one useful interaction.
 **Supporting files:** [PROMPTS.md](PROMPTS.md) · [AI-JOURNAL.md](AI-JOURNAL.md)
 
@@ -57,7 +57,7 @@ Proposed default: one Next.js/TypeScript application with a server-side rewrite 
 
 The server validates inputs and model outputs, keeps the key private, limits request duration and output size, and returns safe errors. Do not log message bodies or credentials. Explain near the action that text is sent to the AI provider. Do not promise anything about provider retention without checking its policy.
 
-**Dependency:** we still need the provider name, an accessible text model, and a working API key configured locally. Never put the key in chat, frontend code, or version control. UI and validation work can proceed before this is available; live AI verification cannot.
+**Provider:** OpenRouter, with `openrouter/free` as the default and a configurable `OPENROUTER_MODEL`. **Remaining dependency:** a working `OPENROUTER_API_KEY` configured locally. Never put the key in chat, frontend code, or version control. UI and validation work can proceed before this is available; live AI verification cannot.
 
 ## 5. Follow these steps in order
 

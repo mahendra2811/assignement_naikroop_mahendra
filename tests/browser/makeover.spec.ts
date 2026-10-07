@@ -218,7 +218,11 @@ test("keyboard navigation and desktop/mobile layout remain usable", async ({
   ).toBeVisible();
   await page.screenshot({ path: "test-results/mobile.png", fullPage: true });
   await page.setViewportSize({ width: 320, height: 740 });
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
 });
 
 test("real local endpoint reports missing credentials instead of sample output", async ({
@@ -233,13 +237,7 @@ test("real local endpoint reports missing credentials instead of sample output",
     },
   });
   const body = await response.json();
-  if (response.status() === 503 && body.error?.code === "configuration") {
-    expect(body.error.message).toContain("API key");
-  } else {
-    // With a real configured key, this check belongs in the evaluation script, not this suite.
-    test.skip(
-      true,
-      "Credentials configured; use npm run evaluate for live provider checks.",
-    );
-  }
+  expect(response.status()).toBe(503);
+  expect(body.error.code).toBe("configuration");
+  expect(body.error.message).toContain("API key");
 });
