@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-type IconName =
+export type IconName =
   | "spark"
   | "message"
   | "chevron"
@@ -11,7 +11,9 @@ type IconName =
   | "briefcase"
   | "flag"
   | "refresh"
-  | "info";
+  | "info"
+  | "length"
+  | "mail";
 const paths: Record<IconName, React.ReactNode> = {
   spark: (
     <>
@@ -28,6 +30,13 @@ const paths: Record<IconName, React.ReactNode> = {
   arrow: (
     <>
       <path d="M5 12h14m-5-5 5 5-5 5" />
+    </>
+  ),
+  length: <path d="M4 6h16M4 12h11M4 18h6" />,
+  mail: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 6 9 7 9-7" />
     </>
   ),
   chevron: <path d="m6 9 6 6 6-6" />,

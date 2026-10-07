@@ -296,11 +296,13 @@ test("sends preferences, invalidates results, and pauses other controls in gramm
     .getByLabel("Your message", { exact: true })
     .fill("Alex i cant attend friday.");
   await page
-    .getByLabel("Message length", { exact: true })
-    .selectOption("Short");
+    .getByRole("combobox", { name: "Message length", exact: true })
+    .click();
+  await page.getByRole("option", { name: /^Short/ }).click();
   await page
-    .getByLabel("Message format", { exact: true })
-    .selectOption("Email");
+    .getByRole("combobox", { name: "Message format", exact: true })
+    .click();
+  await page.getByRole("option", { name: /^Email/ }).click();
   await page.getByRole("button", { name: "Make over my message" }).click();
   await expect(page.getByLabel("Your rewritten message")).toBeVisible();
   expect(requests[0]).toMatchObject({
@@ -309,8 +311,9 @@ test("sends preferences, invalidates results, and pauses other controls in gramm
     grammarOnly: false,
   });
   await page
-    .getByLabel("Message length", { exact: true })
-    .selectOption("Detailed");
+    .getByRole("combobox", { name: "Message length", exact: true })
+    .click();
+  await page.getByRole("option", { name: /^Detailed/ }).click();
   await expect(page.getByLabel("Your rewritten message")).toHaveCount(0);
   await page.getByLabel("Grammar-only mode").check();
   for (const name of [
@@ -335,12 +338,75 @@ test("sends preferences, invalidates results, and pauses other controls in gramm
   });
   await expect(page.getByText("Grammar only", { exact: true })).toBeVisible();
   await page.getByLabel("Grammar-only mode").uncheck();
-  await expect(page.getByLabel("Message length", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("Message length", { exact: true })).toHaveText(
     "Detailed",
   );
-  await expect(page.getByLabel("Message format", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("Message format", { exact: true })).toHaveText(
     "Email",
   );
   await expect(page.getByRole("radio", { name: "Professional" })).toBeEnabled();
   await expect(page.getByLabel("Your rewritten message")).toHaveCount(0);
+});
+
+test("preference menus support keyboard selection, dismissal, and narrow screens", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const length = page.getByRole("combobox", {
+    name: "Message length",
+    exact: true,
+  });
+  const format = page.getByRole("combobox", {
+    name: "Message format",
+    exact: true,
+  });
+  await length.focus();
+  await page.keyboard.press("Enter");
+  await expect(length).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("option", { name: /^Balanced/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await expect(length).toHaveText("Detailed");
+  await expect(length).toBeFocused();
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await page.keyboard.press("ArrowUp");
+  await page.keyboard.press("Home");
+  await page.keyboard.press("Escape");
+  await expect(length).toHaveText("Detailed");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await length.click();
+  await page
+    .getByRole("heading", { name: "What would you like to say?" })
+    .click();
+  await expect(length).toHaveAttribute("aria-expanded", "false");
+  await length.click();
+  await format.click();
+  await expect(page.getByRole("listbox")).toHaveCount(1);
+  await expect(length).toHaveAttribute("aria-expanded", "false");
+  await page.keyboard.press("End");
+  await page.keyboard.press(" ");
+  await expect(format).toHaveText("Email");
+  await format.click();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  for (const width of [1280, 390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await format.click();
+    const bounds = await page.getByRole("listbox").boundingBox();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `test-results/preference-menu-${width}.png`,
+      fullPage: true,
+    });
+    await page.keyboard.press("Escape");
+  }
 });

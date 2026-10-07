@@ -10,6 +10,8 @@ Before the interview, follow the [setup instructions](../README.md#run-locally),
 | 1:15–1:35 | Show length, format, and grammar-only | “Grammar-only pauses other preferences and restores them afterward. The server also enforces that mode.” |
 | 1:35–2:00 | Open AI journal and test report | “AI helped plan, build, and test. I set the scope and requested refinements. We recorded actual failures, including an invented email signature, then revised the prompt and retested.” |
 
+For copy-ready drafts, settings, and example outputs in several formats, use [INTERVIEW-EXAMPLES.md](INTERVIEW-EXAMPLES.md).
+
 ## Useful follow-up answers
 
 **Why this project?** A small problem makes a complete working interaction feasible and easy to assess. I prioritized completion and meaning preservation over a broad feature list.
@@ -18,6 +20,6 @@ Before the interview, follow the [setup instructions](../README.md#run-locally),
 
 **What did you personally direct?** Product selection, the smaller scope, primary assignment guideline, provider configuration, expanded examples, collapsed picker, and the three additional controls. AI-assisted planning and implementation are credited in the journal.
 
-**What did testing establish?** 29 unit/API tests and 10 browser tests checked implementation behavior. Separate live fictional cases checked model behavior. Neither proves correctness on every future message.
+**What did testing establish?** 29 unit/API tests and 11 browser tests checked implementation behavior. Separate live fictional cases checked model behavior. Neither proves correctness on every future message.
 
 **What would you improve next?** Start with external usability feedback and a larger fixed-model evaluation set. Add public-hosting usage controls if deployment is requested.

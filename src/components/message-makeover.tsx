@@ -5,8 +5,6 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   DRAFT_LIMIT,
   INTENTS,
-  MESSAGE_LENGTHS,
-  MESSAGE_FORMATS,
   type MessageLength,
   type MessageFormat,
   OUTPUT_LIMIT,
@@ -18,6 +16,7 @@ import {
   type Tone,
 } from "@/lib/contracts";
 import { Icon } from "./icon";
+import { PreferenceSelect } from "./preference-select";
 
 const samples = [
   {
@@ -366,38 +365,55 @@ export function MessageMakeover() {
                 </select>
               </div>
               <div className="preferences-grid">
-                <div className="preference-field">
-                  <label htmlFor="length">Message length</label>
-                  <select
-                    id="length"
-                    value={length}
-                    disabled={grammarOnly}
-                    onChange={(event) => {
-                      invalidate();
-                      setLength(event.target.value as MessageLength);
-                    }}
-                  >
-                    {MESSAGE_LENGTHS.map((choice) => (
-                      <option key={choice}>{choice}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="preference-field">
-                  <label htmlFor="format">Message format</label>
-                  <select
-                    id="format"
-                    value={format}
-                    disabled={grammarOnly}
-                    onChange={(event) => {
-                      invalidate();
-                      setFormat(event.target.value as MessageFormat);
-                    }}
-                  >
-                    {MESSAGE_FORMATS.map((choice) => (
-                      <option key={choice}>{choice}</option>
-                    ))}
-                  </select>
-                </div>
+                <PreferenceSelect<MessageLength>
+                  key={`length-${grammarOnly}`}
+                  label="Message length"
+                  value={length}
+                  disabled={grammarOnly}
+                  choices={[
+                    {
+                      value: "Short",
+                      description: "Keep it concise",
+                      icon: "length",
+                    },
+                    {
+                      value: "Balanced",
+                      description: "Just enough context",
+                      icon: "length",
+                    },
+                    {
+                      value: "Detailed",
+                      description: "More clarity and structure",
+                      icon: "length",
+                    },
+                  ]}
+                  onChange={(choice) => {
+                    invalidate();
+                    setLength(choice);
+                  }}
+                />
+                <PreferenceSelect<MessageFormat>
+                  key={`format-${grammarOnly}`}
+                  label="Message format"
+                  value={format}
+                  disabled={grammarOnly}
+                  choices={[
+                    {
+                      value: "Chat message",
+                      description: "Ready for a conversation",
+                      icon: "message",
+                    },
+                    {
+                      value: "Email",
+                      description: "Subject and message body",
+                      icon: "mail",
+                    },
+                  ]}
+                  onChange={(choice) => {
+                    invalidate();
+                    setFormat(choice);
+                  }}
+                />
               </div>
               <div className="grammar-option">
                 <label htmlFor="grammar-only">

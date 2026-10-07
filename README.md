@@ -19,8 +19,8 @@ Start with this README for the product, setup, and architecture. Then read the p
 | [question.txt](question.txt) | Original assignment and evaluation criteria | To understand the primary guideline |
 | [PLAN.md](submission/PLAN.md) | Product choice, research summary, scope, decisions, and delivery sequence | To understand why this application was built this way |
 | [AI-JOURNAL.md](submission/AI-JOURNAL.md) | My direction, AI contributions, real failures, corrections, and iterations | To assess AI use throughout the SDLC |
-| [PROMPTS.md](submission/PROMPTS.md) | Consolidated build instructions, exact runtime prompt, and response handling | To review prompt design and how it connects to the code |
 | [TEST-REPORT.md](submission/TEST-REPORT.md) | Automated checks, live evaluation, actual outcomes, and limitations | To judge what has been verified |
+| [INTERVIEW-EXAMPLES.md](submission/INTERVIEW-EXAMPLES.md) | Copy-ready drafts, settings, illustrative formats, and spoken explanations | To demonstrate one draft in several styles |
 | [DEMO.md](submission/DEMO.md) | Two-minute walkthrough and interview discussion points | To review the working application efficiently |
 | [evaluation-results.json](evaluation-results.json) | Original live cases, resolved models, initial failure, retry, and real browser journey | To inspect raw provider evidence |
 | [preference-evaluation-results.json](preference-evaluation-results.json) | Live length/format/grammar cases, including email failures and prompt revisions | To inspect the later feature evaluations |
@@ -37,7 +37,7 @@ The primary guideline is [question.txt](question.txt), which allows any product 
 | Product thinking | A single-page scope, editable output, clarification, and deliberate exclusions |
 | Problem-solving | Validation, safe failures, duplicate/stale-response handling, and real prompt corrections |
 | AI across the lifecycle | Stage-by-stage journal covering ideation through iteration |
-| Working execution | Locally runnable application, live provider evidence, and 39 passing automated tests |
+| Working execution | Locally runnable application, live provider evidence, and 40 passing automated tests |
 | Strategy and decisions | Rejection of excessive initial scope and incremental feature additions |
 
 ## Run locally
@@ -76,6 +76,7 @@ npm start
 - Five intents: Keep original, Request, Follow up, Decline, Apologize.
 - Message length: Short, Balanced (default), Detailed.
 - Message format: Chat message (default), Email with a subject and body.
+- Custom length/format menus with icons, option descriptions, selection checkmarks, and keyboard navigation.
 - Grammar-only mode: correct mistakes with minimal wording changes. Other controls are disabled while this is on; their previous selections return when switched off.
 - One rewrite and one short explanation, or a question if clarification is needed.
 - Editable output; copy feedback and a manual fallback if the clipboard is blocked.
@@ -112,7 +113,7 @@ Errors use `{ "error": { "code": "...", "message": "..." } }`: 400 for invalid i
 
 The key remains on the server. The adapter uses a 30-second timeout, separate system and user messages, JSON mode, low reasoning effort with a bounded 4,000-token total allowance, and output validation. The input limit is 2,000 characters; outputs are limited to 4,000, explanations/questions to 300. The browser cancels stale requests and has a 35-second fallback timeout. There are no automatic retries.
 
-The [runtime prompt](submission/PROMPTS.md) asks the model to retain names, amounts, deadlines, negations, uncertainty, and commitments. Validation checks response structure and length; it cannot prove semantic correctness. Review the result before using it.
+The [runtime prompt](src/lib/rewrite-prompt.ts) asks the model to retain names, amounts, deadlines, negations, uncertainty, and commitments. Validation checks response structure and length; it cannot prove semantic correctness. Review the result before using it.
 
 ## Verification
 
@@ -150,6 +151,7 @@ Live evaluation was completed after the user configured the key. Six fictional c
 | File | Responsibility |
 | --- | --- |
 | [message-makeover.tsx](src/components/message-makeover.tsx) | Form state, examples, preferences, cancellation, editable result, and copying |
+| [preference-select.tsx](src/components/preference-select.tsx) | Accessible length/format dropdowns, selection, keyboard navigation, and dismissal |
 | [globals.css](src/app/globals.css) | Visual styling, responsive layout, and focus states |
 | [route.ts](src/app/api/rewrite/route.ts) | POST endpoint, validation, safe error responses, and resolved-model header |
 | [contracts.ts](src/lib/contracts.ts) | Request/result schemas, limits, defaults, and grammar-only normalization |
@@ -160,6 +162,6 @@ Live evaluation was completed after the user configured the key. Six fictional c
 
 ## Current delivery status
 
-The local application is complete for the agreed scope. Build, lint, type checking, 29 unit/API tests, and 10 browser tests passed. Live provider calls were also evaluated separately with fictional messages. Prompt compliance and meaning preservation still require user review; the free router can select different models.
+The local application is complete for the agreed scope. Build, lint, type checking, 29 unit/API tests, and 11 browser tests passed. Live provider calls were also evaluated separately with fictional messages. Prompt compliance and meaning preservation still require user review; the free router can select different models.
 
 The setup, decisions, prompts, AI collaboration, verification, and demo are included in this repository. Production deployment and external user testing have not been performed.

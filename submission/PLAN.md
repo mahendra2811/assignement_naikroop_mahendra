@@ -1,6 +1,6 @@
 # Message Makeover — Product and Delivery Plan
 
-This is the final scope and decision summary. The original assignment is [question.txt](../question.txt); implementation instructions and the runtime prompt are in [PROMPTS.md](PROMPTS.md).
+This is the final scope and decision summary. The original assignment is [question.txt](../question.txt); the runtime prompt is implemented in [rewrite-prompt.ts](../src/lib/rewrite-prompt.ts).
 
 ## Why I chose this project
 
@@ -52,7 +52,7 @@ These are the actual stages of the work, not measured time entries. The original
 | Decision | Reason |
 | --- | --- |
 | Next.js, React, strict TypeScript | UI and server endpoint in one small application, with checked data contracts |
-| Plain CSS and native form controls | Simple styling, responsive layout, and built-in keyboard behavior |
+| Plain CSS, native controls, and accessible preference menus | Simple styling, responsive layout, and built-in keyboard behavior |
 | Zod validation | Reject unsupported inputs and malformed model responses |
 | OpenRouter with configurable model | One provider adapter; `openrouter/free` is the default |
 | Separate system prompt and user JSON | Keep rewrite instructions separate from the draft being rewritten |
@@ -61,6 +61,6 @@ These are the actual stages of the work, not measured time entries. The original
 
 ## Completion and limits
 
-The application runs locally, has verified live provider calls, and has passed build, lint, type checking, and 39 automated tests. Details are in [TEST-REPORT.md](TEST-REPORT.md).
+The application runs locally, has verified live provider calls, and has passed build, lint, type checking, and 40 automated tests. Details are in [TEST-REPORT.md](TEST-REPORT.md).
 
 Meaning preservation is a prompt objective, not a guarantee. JSON validation cannot prove that the rewrite is semantically correct. Free-router model behavior varies. Deployment, external usability research, and a broader accessibility audit remain outside the completed scope.

@@ -10,7 +10,7 @@ Verified on 7 October 2026. This report separates implementation tests from reco
 | `npm run lint` | Passed | Configured ESLint checks |
 | `npm run typecheck` | Passed | Strict TypeScript compilation checks |
 | `npm run build` | Passed | Production build; page prerendered, rewrite endpoint dynamic |
-| `npm run test:e2e` | 10 Chromium tests passed | Browser interactions against a dedicated production server |
+| `npm run test:e2e` | 11 Chromium tests passed | Browser interactions against a dedicated production server |
 | Visual and layout review | Desktop/mobile screenshots inspected; 390px and 320px checked for overflow | Observed responsive layout and visible controls |
 
 Build, lint, type checking, unit/API tests, and browser tests were rerun when preparing this submission. The visual review was performed during feature implementation.
@@ -80,3 +80,9 @@ npm run test:e2e
 ```
 
 For a new live evaluation, start the app on port 3000 with a valid local key and run `npm run evaluate`. The script sends six fictional messages and **overwrites** `evaluation-results.json`; preserve the existing submission evidence before rerunning it. It does not reproduce the later preference retries or browser journey. HTTP success alone is insufficient: inspect the output and record semantic review separately.
+
+## Length/format menu redesign
+
+Replaced the two browser-native selects with custom combobox/listbox menus using icons, short descriptions, a selected checkmark, and teal focus/active states. Options remain connected to the same validated API fields. Grammar-only disables the controls; remembered selections return when switched off.
+
+Added a browser check for arrow keys, Home/End, Enter/Space, Escape, outside clicks, Tab dismissal, one open menu at a time, and menu bounds at 1280, 390, and 320px. Updated the existing preference-submission test to exercise the new menus. Total automated coverage is now 29 unit/API tests and 11 browser tests. Narrow-menu screenshots prompted a wider popup with right alignment for the format menu to improve readability while keeping it within the screen. No provider contract or runtime prompt changed, and no new live AI calls were needed for this UI revision.

@@ -24,7 +24,7 @@ Codex helped explore alternatives, draft the plan and prompts, implement the app
 
 **Accepted decisions:** preserve meaning, return one rewrite, explain the wording change, allow editing, and ask for clarification when intent conflicts. Defer accounts, storage, history, and sending integrations.
 
-**Evidence:** [PLAN.md](PLAN.md) and [PROMPTS.md](PROMPTS.md). These documents describe a scoped implementation rather than an open-ended platform.
+**Evidence:** [PLAN.md](PLAN.md) records the scope; [rewrite-prompt.ts](../src/lib/rewrite-prompt.ts) contains the runtime instructions. The working prompt document is retained locally in the ignored docs/ folder.
 
 ## 3. Design and development: implement the complete interaction
 
@@ -79,6 +79,8 @@ I requested an interviewer-ready account of what the project does, how I directe
 
 During this handoff, build, lint, type checking, 29 unit/API tests, and 10 browser tests were rerun successfully. Relative documentation links were checked and the published runtime prompt was compared with the code.
 
+The working prompt document was later moved into the ignored docs/ folder at my request. The application continues to use the runtime prompt in source code.
+
 The final [README](../README.md) provides setup and a reading guide. The [test report](TEST-REPORT.md) separates automated and live results. The [demo guide](DEMO.md) explains a two-minute walkthrough.
 
 ## What this demonstrates
@@ -86,3 +88,7 @@ The final [README](../README.md) provides setup and a reading guide. The [test r
 My contribution was choosing the problem, controlling scope, setting requirements, and directing refinements. AI contributed across ideation, planning, design, development, testing, debugging, documentation, and iteration. The important evidence is the working application, the decisions that changed its scope, and the real failures that led to revisions.
 
 No external user research, independent human quality assessment, exact time log, or deployment is claimed.
+
+## Iteration: improve length and format dropdowns
+
+The user requested a better design and interaction for the message-length and message-format dropdowns. Codex implemented a reusable combobox/listbox component with icons, option descriptions, selected checkmarks, and keyboard navigation. The existing state invalidation and grammar-only behavior remain connected to the same API contract. Browser checks verified keyboard selection, Escape and outside dismissal, Tab, one open menu, preference submission, and mobile bounds. Visual review at 320px showed cramped option text, so the popups were widened and the format popup aligned to the right. Build, lint, type checking, 29 unit/API tests, and 11 browser tests passed. This was a UI iteration; no new provider evaluation or screen-reader audit was performed.

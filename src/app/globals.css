@@ -896,6 +896,7 @@ select:focus-visible {
   margin-bottom: 18px;
 }
 .preference-field {
+  position: relative;
   display: grid;
   gap: 8px;
   min-width: 0;
@@ -905,16 +906,129 @@ select:focus-visible {
   font-size: 12px;
   font-weight: 600;
 }
-.preference-field select {
+.preference-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   width: 100%;
   min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  background: white;
-  color: #54675d;
-  padding: 10px;
+  min-height: 44px;
+  border: 1px solid #dce5de;
+  border-radius: 10px;
+  background: #fafcf9;
+  color: #3c594c;
+  padding: 11px 12px;
   font-size: 12px;
+  text-align: left;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
 }
+.preference-selected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.preference-selected svg,
+.preference-trigger > svg {
+  flex-shrink: 0;
+  color: var(--teal);
+}
+.preference-trigger:hover:not(:disabled) {
+  background: #f1f7f2;
+  border-color: #95b5a7;
+}
+.preference-trigger.is-open {
+  background: white;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px #16726812;
+}
+.preference-trigger > svg {
+  transition: transform 0.15s;
+}
+.preference-trigger.is-open > svg {
+  transform: rotate(180deg);
+}
+.preference-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.preference-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  right: auto;
+  width: max(100%, min(224px, calc(100vw - 64px)));
+  z-index: 20;
+  padding: 5px;
+  border: 1px solid #dce5de;
+  border-radius: 12px;
+  background: white;
+  box-shadow:
+    0 12px 32px #244d3c1a,
+    0 2px 6px #244d3c08;
+}
+.preference-field:last-child .preference-menu {
+  left: auto;
+  right: 0;
+}
+.preference-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 9px 8px;
+  border-radius: 8px;
+  color: #52675b;
+  cursor: pointer;
+}
+.preference-choice > svg {
+  flex-shrink: 0;
+}
+.preference-choice.is-active {
+  background: #f1f6f2;
+}
+.preference-choice[aria-selected="true"] {
+  color: var(--teal);
+}
+.preference-choice-text {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+.preference-choice-text > span {
+  font-size: 12px;
+  font-weight: 600;
+}
+.preference-choice-text small {
+  font-size: 10px;
+  line-height: 1.4;
+  color: #758579;
+}
+@media (max-width: 360px) {
+  .preferences-grid {
+    gap: 8px;
+  }
+  .preference-trigger {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+  .preference-selected {
+    gap: 5px;
+  }
+  .preference-selected > svg {
+    display: none;
+  }
+  .preference-choice {
+    gap: 5px;
+    padding: 8px 5px;
+  }
+}
+
 .grammar-option {
   margin-bottom: 22px;
 }
