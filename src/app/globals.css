@@ -247,20 +247,45 @@ select:focus-visible {
   color: var(--teal);
   font-weight: 700;
 }
+.examples-disclosure {
+  margin: 12px 0 24px;
+}
+.sample-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  color: var(--teal);
+  font-size: 12px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 4px;
+}
+.sample-toggle::-webkit-details-marker {
+  display: none;
+}
+.sample-toggle:focus-visible {
+  outline: 3px solid #64b5a6;
+  outline-offset: 4px;
+}
+.sample-toggle svg {
+  transition: transform 0.18s;
+}
+.examples-disclosure[open] .sample-toggle svg {
+  transform: rotate(180deg);
+}
 .sample-row {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-  margin: 12px 0 24px;
+  margin: 8px 0 0;
   font-size: 10px;
   color: var(--muted);
 }
-.sample-row > span {
-  margin-right: 3px;
-}
 .sample-button {
-  font-size: 10px;
+  font-size: 11px;
+  min-height: 30px;
   background: transparent;
   border: 1px solid #e6ebe4;
   border-radius: 20px;
@@ -862,4 +887,58 @@ select:focus-visible {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+.preferences-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.preference-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.preference-field label,
+.grammar-option label {
+  font-size: 12px;
+  font-weight: 600;
+}
+.preference-field select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: white;
+  color: #54675d;
+  padding: 10px;
+  font-size: 12px;
+}
+.grammar-option {
+  margin-bottom: 22px;
+}
+.grammar-option label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.grammar-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+}
+.grammar-option p {
+  color: #738278;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 7px 0 0 24px;
+}
+.tone-field:disabled {
+  opacity: 0.5;
+}
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

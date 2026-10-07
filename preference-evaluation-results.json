@@ -1,0 +1,102 @@
+{
+  "evaluatedAt": "2026-10-07T13:11:56.596Z",
+  "kind": "live-provider; fictional messages only",
+  "observations": [
+    {
+      "name": "short chat",
+      "input": {
+        "draft": "Hi Alex, I wanted to remind you that the remaining ₹2,400 payment is due by Friday. Please let me know once you have sent it. I cannot extend the deadline.",
+        "tone": "Professional",
+        "intent": "Follow up",
+        "length": "Short",
+        "format": "Chat message",
+        "grammarOnly": false
+      },
+      "httpStatus": 200,
+      "resolvedModel": "dots-studio/dots-3-note-preview:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Hi Alex, this is a reminder that the remaining ₹2,400 payment is due by Friday. Please confirm once sent. The deadline cannot be extended.",
+        "explanation": "Simplified the phrasing to be more direct and concise, removing redundant words while preserving all essential information."
+      },
+      "semanticReview": "Agent-reviewed: shorter chat text preserves Alex, ₹2,400, Friday, confirmation request, and refusal to extend the deadline."
+    },
+    {
+      "name": "detailed email",
+      "input": {
+        "draft": "Hi Priya, I might finish the report by Wednesday, but I cannot confirm that yet. I will share an update tomorrow.",
+        "tone": "Friendly",
+        "intent": "Keep original",
+        "length": "Detailed",
+        "format": "Email",
+        "grammarOnly": false
+      },
+      "httpStatus": 200,
+      "resolvedModel": "liquid/lfm-2.5-2.6b:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Hi Priya, I might finish the report by Wednesday, but I cannot confirm that yet. I will share an update tomorrow.",
+        "explanation": "The draft is already clear and appropriately written for a friendly email. No changes were needed to preserve the original meaning, tone, or intent."
+      },
+      "semanticReview": "Agent-reviewed failure: facts preserved but required email subject/body formatting was ignored."
+    },
+    {
+      "name": "grammar only with conflicting options",
+      "input": {
+        "draft": "Hi Alex, i accept your invitation and will attends on Friday. i cant promise Monday.",
+        "tone": "Firm",
+        "intent": "Decline",
+        "length": "Detailed",
+        "format": "Email",
+        "grammarOnly": true
+      },
+      "httpStatus": 200,
+      "resolvedModel": "apodex/apodex-1.1-mini:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Hi Alex, I accept your invitation and will attend on Friday. I can't promise Monday.",
+        "explanation": "Capitalized 'I', corrected 'attends' to 'attend', and added apostrophe to 'can't'."
+      },
+      "semanticReview": "Agent-reviewed: capitalization, verb agreement, and apostrophe corrected with minimal wording changes. Acceptance and inability to promise Monday preserved despite conflicting disabled options."
+    },
+    {
+      "name": "detailed email after explicit format prompt correction",
+      "input": {
+        "draft": "Hi Priya, I might finish the report by Wednesday, but I cannot confirm that yet. I will share an update tomorrow.",
+        "tone": "Friendly",
+        "intent": "Keep original",
+        "length": "Detailed",
+        "format": "Email",
+        "grammarOnly": false
+      },
+      "httpStatus": 200,
+      "resolvedModel": "liquid/lfm-2.5-2.6b:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Subject: Report Progress Update\n\nHi Priya,\n\nI might finish the report by Wednesday, but I cannot confirm that yet. I will share an update tomorrow.\n\nBest regards,\nPriya",
+        "explanation": "Added a Subject line per email format requirements and kept the original friendly tone and content intact."
+      },
+      "semanticReview": "Agent-reviewed failure: subject/body added, but recipient Priya was incorrectly reused as a sender signature. Tightened instruction to omit sign-offs unless present in the draft."
+    },
+    {
+      "name": "detailed email after no-signature correction",
+      "input": {
+        "draft": "Hi Priya, I might finish the report by Wednesday, but I cannot confirm that yet. I will share an update tomorrow.",
+        "tone": "Friendly",
+        "intent": "Keep original",
+        "length": "Detailed",
+        "format": "Email",
+        "grammarOnly": false
+      },
+      "httpStatus": 200,
+      "resolvedModel": "nvidia/nemotron-3-super-120b-a12b:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Subject: Report Update Timeline\n\nHi Priya,\n\nI may finish the report by Wednesday, but I cannot confirm this yet. I will provide an update tomorrow.",
+        "explanation": "Changed 'might' to 'may', 'share' to 'provide', and 'that' to 'this' for smoother phrasing while preserving meaning."
+      },
+      "semanticReview": "Agent-reviewed: subject and body produced; recipient, uncertain Wednesday completion, and tomorrow update preserved; no invented signature. Different resolved model means the success cannot be attributed only to prompt changes."
+    }
+  ],
+  "limitations": "Five fictional live calls; three scenarios plus two corrective email retries. Semantic preservation and preference compliance are not guaranteed across free-router models."
+}

@@ -6,6 +6,9 @@ const input = {
   draft: "Alex, send ₹2,400 by Friday. I cannot promise Monday.",
   tone: "Professional",
   intent: "Keep original",
+  length: "Balanced",
+  format: "Chat message",
+  grammarOnly: false,
 };
 const result = {
   status: "ok",

@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 type IconName =
   | "spark"
   | "message"
+  | "chevron"
   | "arrow"
   | "copy"
   | "check"
@@ -29,6 +30,7 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M5 12h14m-5-5 5 5-5 5" />
     </>
   ),
+  chevron: <path d="m6 9 6 6 6-6" />,
   copy: (
     <>
       <rect x="8" y="8" width="12" height="13" rx="2" />

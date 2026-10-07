@@ -11,11 +11,29 @@ export const INTENTS = [
   "Apologize",
 ] as const;
 
-export const rewriteInputSchema = z.strictObject({
-  draft: z.string().max(DRAFT_LIMIT).trim().min(1),
-  tone: z.enum(TONES),
-  intent: z.enum(INTENTS),
-});
+export const MESSAGE_LENGTHS = ["Short", "Balanced", "Detailed"] as const;
+export const MESSAGE_FORMATS = ["Chat message", "Email"] as const;
+
+export const rewriteInputSchema = z
+  .strictObject({
+    draft: z.string().max(DRAFT_LIMIT).trim().min(1),
+    tone: z.enum(TONES),
+    intent: z.enum(INTENTS),
+    length: z.enum(MESSAGE_LENGTHS).default("Balanced"),
+    format: z.enum(MESSAGE_FORMATS).default("Chat message"),
+    grammarOnly: z.boolean().default(false),
+  })
+  .transform((input) =>
+    input.grammarOnly
+      ? {
+          ...input,
+          tone: "Professional" as const,
+          intent: "Keep original" as const,
+          length: "Balanced" as const,
+          format: "Chat message" as const,
+        }
+      : input,
+  );
 
 export const rewriteResultSchema = z.discriminatedUnion("status", [
   z.strictObject({
@@ -33,3 +51,6 @@ export type Tone = (typeof TONES)[number];
 export type Intent = (typeof INTENTS)[number];
 export type RewriteInput = z.infer<typeof rewriteInputSchema>;
 export type RewriteResult = z.infer<typeof rewriteResultSchema>;
+
+export type MessageLength = (typeof MESSAGE_LENGTHS)[number];
+export type MessageFormat = (typeof MESSAGE_FORMATS)[number];

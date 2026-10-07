@@ -5,6 +5,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   DRAFT_LIMIT,
   INTENTS,
+  MESSAGE_LENGTHS,
+  MESSAGE_FORMATS,
+  type MessageLength,
+  type MessageFormat,
   OUTPUT_LIMIT,
   TONES,
   rewriteInputSchema,
@@ -34,6 +38,54 @@ const samples = [
       "I’m sorry I missed our call today. I forgot to check my calendar. Could we reschedule?",
     intent: "Apologize" as Intent,
   },
+  {
+    label: "Payment reminder",
+    draft:
+      "Hi Sam, the remaining ₹2,400 payment was due yesterday. Please send it by Friday and let me know once it’s done.",
+    intent: "Follow up" as Intent,
+  },
+  {
+    label: "Leave request",
+    draft:
+      "Hi Priya, I would like to take leave on Monday for a personal appointment. Can you approve the request?",
+    intent: "Request" as Intent,
+  },
+  {
+    label: "Meeting invite",
+    draft:
+      "Hi team, can we meet on Thursday at 11 AM for 20 minutes to discuss the website launch? Please let me know if that time works.",
+    intent: "Request" as Intent,
+  },
+  {
+    label: "Reschedule",
+    draft:
+      "I can’t make our meeting at 2 PM tomorrow. Could we move it to 4 PM instead? Please let me know if that works for you.",
+    intent: "Request" as Intent,
+  },
+  {
+    label: "Constructive feedback",
+    draft:
+      "The design looks good, but the text is hard to read on mobile. Please increase the font size and spacing before the next review.",
+    intent: "Request" as Intent,
+  },
+  {
+    label: "A thank-you",
+    draft:
+      "Thanks for helping me prepare for the presentation yesterday. Your feedback made the slides much clearer, and I really appreciate your time.",
+    intent: "Keep original" as Intent,
+  },
+  {
+    label: "Deadline update",
+    draft:
+      "The report is taking longer than expected. I might finish it by Wednesday, but I can’t confirm that yet. I’ll share an update tomorrow.",
+    intent: "Keep original" as Intent,
+  },
+  {
+    label: "Customer reply",
+    draft:
+      "I’m sorry we sent you the wrong item. Please share your order number so we can check what happened and discuss the next steps.",
+    intent: "Apologize" as Intent,
+  },
 ];
 const toneDetails = {
   Friendly: { icon: "smile", description: "Warm & natural" },
@@ -45,6 +97,9 @@ export function MessageMakeover() {
   const [draft, setDraft] = useState("");
   const [tone, setTone] = useState<Tone>("Professional");
   const [intent, setIntent] = useState<Intent>("Keep original");
+  const [length, setLength] = useState<MessageLength>("Balanced");
+  const [format, setFormat] = useState<MessageFormat>("Chat message");
+  const [grammarOnly, setGrammarOnly] = useState(false);
   const [result, setResult] = useState<RewriteResult | null>(null);
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -85,7 +140,14 @@ export function MessageMakeover() {
   async function rewrite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (controller.current) return;
-    const validated = rewriteInputSchema.safeParse({ draft, tone, intent });
+    const validated = rewriteInputSchema.safeParse({
+      draft,
+      tone,
+      intent,
+      length,
+      format,
+      grammarOnly,
+    });
     if (!validated.success) {
       setError("Add a message between 1 and 2,000 characters to get started.");
       draftRef.current?.focus();
@@ -237,25 +299,30 @@ export function MessageMakeover() {
                   </span>
                 </div>
               </div>
-              <div className="sample-row">
-                <span>Try an example</span>
-                {samples.map((sample) => (
-                  <button
-                    type="button"
-                    key={sample.label}
-                    className="sample-button"
-                    onClick={() => {
-                      invalidate();
-                      setDraft(sample.draft);
-                      setIntent(sample.intent);
-                      draftRef.current?.focus();
-                    }}
-                  >
-                    {sample.label}
-                  </button>
-                ))}
-              </div>
-              <fieldset className="tone-field">
+              <details className="examples-disclosure">
+                <summary className="sample-toggle">
+                  <span>Try an example</span>
+                  <Icon name="chevron" size={16} />
+                </summary>
+                <div className="sample-row">
+                  {samples.map((sample) => (
+                    <button
+                      type="button"
+                      key={sample.label}
+                      className="sample-button"
+                      onClick={() => {
+                        invalidate();
+                        setDraft(sample.draft);
+                        setIntent(sample.intent);
+                        draftRef.current?.focus();
+                      }}
+                    >
+                      {sample.label}
+                    </button>
+                  ))}
+                </div>
+              </details>
+              <fieldset className="tone-field" disabled={grammarOnly}>
                 <legend>How should it sound?</legend>
                 <div className="tone-options">
                   {TONES.map((choice) => (
@@ -286,6 +353,7 @@ export function MessageMakeover() {
                 </label>
                 <select
                   id="intent"
+                  disabled={grammarOnly}
                   value={intent}
                   onChange={(event) => {
                     invalidate();
@@ -296,6 +364,59 @@ export function MessageMakeover() {
                     <option key={choice}>{choice}</option>
                   ))}
                 </select>
+              </div>
+              <div className="preferences-grid">
+                <div className="preference-field">
+                  <label htmlFor="length">Message length</label>
+                  <select
+                    id="length"
+                    value={length}
+                    disabled={grammarOnly}
+                    onChange={(event) => {
+                      invalidate();
+                      setLength(event.target.value as MessageLength);
+                    }}
+                  >
+                    {MESSAGE_LENGTHS.map((choice) => (
+                      <option key={choice}>{choice}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="preference-field">
+                  <label htmlFor="format">Message format</label>
+                  <select
+                    id="format"
+                    value={format}
+                    disabled={grammarOnly}
+                    onChange={(event) => {
+                      invalidate();
+                      setFormat(event.target.value as MessageFormat);
+                    }}
+                  >
+                    {MESSAGE_FORMATS.map((choice) => (
+                      <option key={choice}>{choice}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="grammar-option">
+                <label htmlFor="grammar-only">
+                  <input
+                    id="grammar-only"
+                    type="checkbox"
+                    checked={grammarOnly}
+                    aria-describedby="grammar-help"
+                    onChange={(event) => {
+                      invalidate();
+                      setGrammarOnly(event.target.checked);
+                    }}
+                  />
+                  Grammar-only mode
+                </label>
+                <p id="grammar-help">
+                  Correct mistakes with minimal wording changes. Tone, intent,
+                  length, and format are paused.
+                </p>
               </div>
               {error && (
                 <div className="error-notice" role="alert">
@@ -315,10 +436,14 @@ export function MessageMakeover() {
                     <Icon name={error ? "refresh" : "spark"} size={19} />
                   )}
                   {loading
-                    ? "Finding the right words…"
+                    ? grammarOnly
+                      ? "Checking the grammar…"
+                      : "Finding the right words…"
                     : error
                       ? "Try again"
-                      : "Make over my message"}
+                      : grammarOnly
+                        ? "Fix grammar"
+                        : "Make over my message"}
                 </span>
                 {!loading && <Icon name="arrow" size={19} />}
               </button>
@@ -341,7 +466,8 @@ export function MessageMakeover() {
               </span>
               {result?.status === "ok" && (
                 <span className="panel-tag result-tag">
-                  <Icon name="check" size={12} /> {tone}
+                  <Icon name="check" size={12} />{" "}
+                  {grammarOnly ? "Grammar only" : tone}
                 </span>
               )}
             </div>

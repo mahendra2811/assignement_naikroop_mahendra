@@ -21,6 +21,7 @@ test("rewrites, edits, and copies the edited message; changing intent clears obs
   await mockSuccess(page);
   await page.goto("/");
   await expect(page.getByRole("radio", { name: "Professional" })).toBeChecked();
+  await page.locator(".sample-toggle").click();
   await page.getByRole("button", { name: "A follow-up", exact: true }).click();
   await page.getByRole("button", { name: "Make over my message" }).click();
   const rewritten = page.getByLabel("Your rewritten message");
@@ -177,6 +178,7 @@ test("clipboard rejection selects the editable text for manual copy", async ({
   });
   await mockSuccess(page);
   await page.goto("/");
+  await page.locator(".sample-toggle").click();
   await page.getByRole("button", { name: "A polite no", exact: true }).click();
   await page.getByRole("button", { name: "Make over my message" }).click();
   await page.getByRole("button", { name: "Copy message" }).click();
@@ -200,6 +202,20 @@ test("keyboard navigation and desktop/mobile layout remain usable", async ({
   ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByLabel("Your message", { exact: true })).toBeFocused();
+  const disclosure = page.locator(".sample-toggle");
+  await expect(
+    page.getByRole("button", { name: "A follow-up", exact: true }),
+  ).toBeHidden();
+  await disclosure.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: "A follow-up", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".sample-button")).toHaveCount(11);
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: "A follow-up", exact: true }),
+  ).toBeHidden();
   await page.getByRole("radio", { name: "Professional" }).focus();
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("radio", { name: "Firm" })).toBeChecked();
@@ -265,4 +281,66 @@ test("unexpected transport content gives a readable error instead of technical d
   await expect(page.getByLabel("Your message", { exact: true })).toHaveValue(
     "Please send the file today.",
   );
+});
+
+test("sends preferences, invalidates results, and pauses other controls in grammar-only mode", async ({
+  page,
+}) => {
+  const requests: Record<string, unknown>[] = [];
+  await page.route("**/api/rewrite", async (route) => {
+    requests.push(route.request().postDataJSON());
+    await route.fulfill({ json: success });
+  });
+  await page.goto("/");
+  await page
+    .getByLabel("Your message", { exact: true })
+    .fill("Alex i cant attend friday.");
+  await page
+    .getByLabel("Message length", { exact: true })
+    .selectOption("Short");
+  await page
+    .getByLabel("Message format", { exact: true })
+    .selectOption("Email");
+  await page.getByRole("button", { name: "Make over my message" }).click();
+  await expect(page.getByLabel("Your rewritten message")).toBeVisible();
+  expect(requests[0]).toMatchObject({
+    length: "Short",
+    format: "Email",
+    grammarOnly: false,
+  });
+  await page
+    .getByLabel("Message length", { exact: true })
+    .selectOption("Detailed");
+  await expect(page.getByLabel("Your rewritten message")).toHaveCount(0);
+  await page.getByLabel("Grammar-only mode").check();
+  for (const name of [
+    "Message length",
+    "Message format",
+    "What’s your intention?",
+  ]) {
+    await expect(
+      page.getByLabel(name, { exact: name !== "What’s your intention?" }),
+    ).toBeDisabled();
+  }
+  await expect(
+    page.getByRole("radio", { name: "Professional" }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Fix grammar", exact: true }).click();
+  await expect(page.getByLabel("Your rewritten message")).toBeVisible();
+  expect(requests[1]).toMatchObject({
+    grammarOnly: true,
+    intent: "Keep original",
+    length: "Balanced",
+    format: "Chat message",
+  });
+  await expect(page.getByText("Grammar only", { exact: true })).toBeVisible();
+  await page.getByLabel("Grammar-only mode").uncheck();
+  await expect(page.getByLabel("Message length", { exact: true })).toHaveValue(
+    "Detailed",
+  );
+  await expect(page.getByLabel("Message format", { exact: true })).toHaveValue(
+    "Email",
+  );
+  await expect(page.getByRole("radio", { name: "Professional" })).toBeEnabled();
+  await expect(page.getByLabel("Your rewritten message")).toHaveCount(0);
 });

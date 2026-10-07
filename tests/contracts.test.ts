@@ -66,3 +66,46 @@ describe("model output validation", () => {
       expect(rewriteResultSchema.safeParse(value).success).toBe(false);
   });
 });
+
+describe("rewrite preferences", () => {
+  it("defaults older requests to balanced chat rewrites", () => {
+    expect(rewriteInputSchema.parse(input)).toEqual({
+      ...input,
+      length: "Balanced",
+      format: "Chat message",
+      grammarOnly: false,
+    });
+  });
+  it("validates the new options", () => {
+    expect(
+      rewriteInputSchema.parse({ ...input, length: "Short", format: "Email" })
+        .length,
+    ).toBe("Short");
+    for (const patch of [
+      { length: "Huge" },
+      { format: "SMS" },
+      { grammarOnly: "true" },
+    ]) {
+      expect(rewriteInputSchema.safeParse({ ...input, ...patch }).success).toBe(
+        false,
+      );
+    }
+  });
+  it("normalizes conflicting preferences for grammar-only requests on the server", () => {
+    expect(
+      rewriteInputSchema.parse({
+        ...input,
+        grammarOnly: true,
+        tone: "Firm",
+        intent: "Decline",
+        length: "Detailed",
+        format: "Email",
+      }),
+    ).toEqual({
+      ...input,
+      grammarOnly: true,
+      length: "Balanced",
+      format: "Chat message",
+    });
+  });
+});
