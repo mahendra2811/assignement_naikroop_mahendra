@@ -105,8 +105,10 @@ Success:
 Clarification:
 {"status":"needs_clarification","question":"One concise question?"}
 
-Produce one rewrite, not several alternatives. The explanation describes the
-edit; it must not claim that factual correctness has been independently verified.
+Produce one rewrite, not several alternatives. Keep the explanation under
+300 characters and describe a concrete wording change that actually occurred.
+Do not claim the message was reordered if you only added a word. The explanation
+must not claim that factual correctness has been independently verified.
 ```
 
 ## 3. Request and response handling

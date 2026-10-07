@@ -16,7 +16,7 @@ Primary guideline: [question.txt](question.txt). Record actual collaboration and
 - **AI contribution:** prepared a scoped plan, ordered build steps, implementation prompt, and runtime rewrite prompt.
 - **Decision:** focus on meaning preservation, editable output, and an honest explanation of changes. Defer accounts, storage, and integrations.
 - **Evidence:** PLAN.md and PROMPTS.md.
-- **Limitation:** no application code, runtime prompt evaluation, live model calls, or user testing has been completed yet. Provider configuration remains unresolved.
+- **State at planning time:** no application code, runtime prompt evaluation, live model calls, or user testing had been completed. Provider configuration was unresolved. Later implementation and verification are recorded below.
 
 ## Completed: design and implementation
 
@@ -32,7 +32,7 @@ Primary guideline: [question.txt](question.txt). Record actual collaboration and
 - **AI contribution:** suggested boundary cases and implemented meaningful unit/API and browser checks, including stale responses and clipboard rejection.
 - **Actual failures:** lint rejected a plain home anchor; two browser selectors matched Next.js's route announcement as well as our error; the initial development-server browser run had blocked dev-resource warnings and interaction failures.
 - **Changes:** used Link, scoped error assertions, configured the local dev origin/project root, and made browser checks run against a dedicated production server. That server has a deliberately empty key, preventing unintended provider calls during tests.
-- **Verification:** lint, type checking, production build, 26 unit/API tests, and eight Chromium browser tests passed. Tests used fictional fixtures; no successful live model calls were made.
+- **Verification:** lint, type checking, production build, 26 unit/API tests, and nine Chromium browser tests passed. The automated suite used fictional fixtures; a separate live evaluation was performed later, recorded below.
 - **Evidence:** TEST-REPORT.md and runnable test scripts. Actual test status is kept separate from semantic model evaluation.
 
 ## Completed: iteration and documentation
@@ -42,9 +42,16 @@ Primary guideline: [question.txt](question.txt). Record actual collaboration and
 - **Documentation:** wrote setup instructions, API behavior, test steps, provider configuration, and a short demo. Verified documented build/test commands and checked missing-key behavior.
 - **Outcome:** a complete local implementation with repeatable checks and transparent remaining limits. No external user feedback was fabricated.
 
-## Pending: live AI evaluation
+## Completed: live AI evaluation and prompt iteration
 
-No key was configured at handoff. The evaluation command reports this and performs no model calls. Once configured, run the supplied six-case evaluation and record resolved model, output, tone, factual preservation, and clarification behavior. Do not mark these checks complete based on intercepted browser fixtures.
+- **Configuration:** the user supplied the OpenRouter key in the local environment file. The key was neither displayed nor added to version control.
+- **Initial observation:** five of six fictional cases produced valid outputs; a firm-tone request returned an incomplete response and was rejected. Its original failure was preserved.
+- **AI contribution:** checked the provider’s official reasoning-token documentation. Reasoning can consume the completion allowance, which is a possible explanation for incomplete content, not a confirmed diagnosis here.
+- **Changes:** requested low reasoning effort and increased the bounded total allowance to 4,000 tokens. Strengthened the explanation instruction after one response overstated the wording change. Character caps, timeout, and manual retry remain unchanged.
+- **Retest:** the firm-tone request passed on a targeted retry with a different resolved free model. Amount, deadline, and refusal to extend were retained. The model difference prevents attributing recovery solely to the configuration change.
+- **Real browser verification:** submitted the follow-up sample to the actual provider, edited the returned message, and verified clipboard contents. HTTP 200, no browser runtime errors, copy succeeded.
+- **Evidence:** evaluation-results.json records all initial results, the retry, model names, and the browser result. Agent review is labeled as such; external human feedback has not been fabricated.
+- **Limitation:** a small passing sample does not guarantee tone or factual correctness on new messages. Free-model selection, availability, and output reliability can vary.
 
 ## Entry template
 

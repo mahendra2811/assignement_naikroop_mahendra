@@ -70,7 +70,7 @@ These are illustrative response examples, not recorded live model outputs.
 
 Errors use `{ "error": { "code": "...", "message": "..." } }`: 400 for invalid input, 503 for configuration, 429 for provider limits, 502 for provider/response failures, and 504 for timeout. Successful responses include an `X-Rewrite-Model` header so evaluations can record the resolved model.
 
-The key remains on the server. The adapter uses a 30-second timeout, separate system and user messages, JSON mode, and output validation. The input limit is 2,000 characters; outputs are limited to 4,000, explanations/questions to 300. The browser cancels stale requests and has a 35-second fallback timeout. There are no automatic retries.
+The key remains on the server. The adapter uses a 30-second timeout, separate system and user messages, JSON mode, low reasoning effort with a bounded 4,000-token total allowance, and output validation. The input limit is 2,000 characters; outputs are limited to 4,000, explanations/questions to 300. The browser cancels stale requests and has a 35-second fallback timeout. There are no automatic retries.
 
 The [runtime prompt](PROMPTS.md) asks the model to retain names, amounts, deadlines, negations, uncertainty, and commitments. Validation checks response structure and length; it cannot prove semantic correctness. Review the result before using it.
 
@@ -103,4 +103,4 @@ This sends six fictional test cases across all tones and records the resolved mo
 4. Edit the rewrite and copy it. Show a different tone or a clarification if time permits.
 5. Show the actual scope correction and one tested implementation decision in the AI journal.
 
-Live evaluation was pending at handoff because no key was configured. No deployment or user research has been performed. This is a local assignment prototype; public hosting would also need appropriate usage controls for its unauthenticated AI endpoint.
+Live evaluation was completed after the user configured the key. Six fictional cases were exercised, with one initially incomplete response safely rejected and a successful targeted retry. A real browser rewrite/edit/copy journey also passed. See `evaluation-results.json` for the original outcomes and agent review. No deployment or user research has been performed. This is a local assignment prototype; public hosting would also need appropriate usage controls for its unauthenticated AI endpoint.

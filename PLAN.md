@@ -2,7 +2,7 @@
 
 **Primary guideline:** [question.txt](question.txt). Read it before implementation and before final review. This plan translates that brief into a small project; it does not replace it.
 
-**Status:** application implemented; build, lint, type checks, unit/API tests, and browser tests passed. Live AI output evaluation remains pending credentials.
+**Status:** application implemented; build, lint, type checks, unit/API tests, and browser tests passed. Six fictional live cases were evaluated, including a recorded initial failure and successful targeted retry; real browser rewriting, editing, and copying also passed.
 **Scope:** one day, one page, one useful interaction.
 **Supporting files:** [PROMPTS.md](PROMPTS.md) · [AI-JOURNAL.md](AI-JOURNAL.md)
 
@@ -57,7 +57,7 @@ Proposed default: one Next.js/TypeScript application with a server-side rewrite 
 
 The server validates inputs and model outputs, keeps the key private, limits request duration and output size, and returns safe errors. Do not log message bodies or credentials. Explain near the action that text is sent to the AI provider. Do not promise anything about provider retention without checking its policy.
 
-**Provider:** OpenRouter, with `openrouter/free` as the default and a configurable `OPENROUTER_MODEL`. **Remaining dependency:** a working `OPENROUTER_API_KEY` configured locally. Never put the key in chat, frontend code, or version control. UI and validation work can proceed before this is available; live AI verification cannot.
+**Provider:** OpenRouter, with `openrouter/free` as the default and a configurable `OPENROUTER_MODEL`. **Configuration:** `OPENROUTER_API_KEY` was configured locally and live calls were verified. Never put the key in chat, frontend code, or version control. UI and validation work can proceed before this is available; live AI verification cannot.
 
 ## 5. Follow these steps in order
 
@@ -70,7 +70,7 @@ The server validates inputs and model outputs, keeps the key private, limits req
 | 5. Test and iterate | Run focused checks, review tone/meaning examples, and fix observed failures | Actual test results and a documented revision | 60 min |
 | 6. Package | Write README, update AI journal, record limitations, prepare a two-minute demo | Fresh-start instructions and reviewable submission | 30 min |
 
-**Estimate: about five focused hours**, assuming familiar tools and working provider access. Local runnable delivery comes first; deployment can be decided separately. These are proposed steps, not completed work.
+**Estimate: about five focused hours**, assuming familiar tools and working provider access. Local runnable delivery comes first; deployment can be decided separately. These estimates describe the original plan. Actual implementation and verification are recorded in TEST-REPORT.md.
 
 ## 6. Definition of done
 

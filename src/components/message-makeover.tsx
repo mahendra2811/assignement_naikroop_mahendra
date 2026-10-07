@@ -104,7 +104,12 @@ export function MessageMakeover() {
         body: JSON.stringify(validated.data),
         signal: active.signal,
       });
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("We couldn’t read the response. Please try again.");
+      }
       if (currentGeneration !== generation.current) return;
       if (!response.ok) {
         throw new Error(
@@ -123,9 +128,11 @@ export function MessageMakeover() {
       setError(
         active.signal.aborted
           ? "That took longer than expected. Please try again."
-          : failure instanceof Error
-            ? failure.message
-            : "We couldn’t connect. Please try again.",
+          : failure instanceof TypeError
+            ? "We couldn’t connect. Please try again in a moment."
+            : failure instanceof Error
+              ? failure.message
+              : "We couldn’t connect. Please try again.",
       );
     } finally {
       clearTimeout(timeout);

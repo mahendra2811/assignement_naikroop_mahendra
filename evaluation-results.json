@@ -1,0 +1,157 @@
+{
+  "evaluatedAt": "2026-10-07T12:46:18.866Z",
+  "kind": "live-provider; fictional messages only",
+  "observations": [
+    {
+      "name": "deadline and name",
+      "input": {
+        "draft": "Alex, send the file by 3 PM today. I need it for the review.",
+        "tone": "Professional",
+        "intent": "Request"
+      },
+      "expected": "ok",
+      "factsToReview": [
+        "Alex",
+        "3 PM",
+        "today"
+      ],
+      "httpStatus": 200,
+      "resolvedModel": "liquid/lfm-2.5-2.6b:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Alex, please send the file by 3 PM today. I need it for the review.",
+        "explanation": "Reordered the phrasing for clarity while maintaining the original deadline and purpose, using a polite but direct professional tone."
+      },
+      "semanticReview": "Agent review: Alex, 3 PM today, and the review purpose are preserved. The initial explanation overstates a reordering; this prompted a more concrete explanation instruction."
+    },
+    {
+      "name": "amount and firm deadline",
+      "input": {
+        "draft": "Please pay the remaining ₹2,400 by Friday. I cannot extend the deadline.",
+        "tone": "Firm",
+        "intent": "Follow up"
+      },
+      "expected": "ok",
+      "factsToReview": [
+        "₹2,400",
+        "Friday",
+        "cannot extend"
+      ],
+      "httpStatus": 502,
+      "resolvedModel": null,
+      "output": {
+        "error": {
+          "code": "invalid_response",
+          "message": "The AI returned an incomplete response. Please try again."
+        }
+      },
+      "semanticReview": "No rewrite to review: the initial response was incomplete and safely rejected. See the recorded follow-up."
+    },
+    {
+      "name": "refusal",
+      "input": {
+        "draft": "Thanks for inviting me. I cannot take on this project this week.",
+        "tone": "Friendly",
+        "intent": "Decline"
+      },
+      "expected": "ok",
+      "factsToReview": [
+        "cannot",
+        "this week"
+      ],
+      "httpStatus": 200,
+      "resolvedModel": "dots-studio/dots-3-note-preview:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "Thanks so much for the invitation! I'm not able to take on the project this week.",
+        "explanation": "Made the tone warmer by using 'thanks so much' and a contraction for a more natural feel."
+      },
+      "semanticReview": "Agent review: refusal and this-week limitation are preserved; the phrasing is warmer without adding an excuse or promise."
+    },
+    {
+      "name": "existing apology",
+      "input": {
+        "draft": "I am sorry I missed our call. I forgot to check my calendar. Could we reschedule?",
+        "tone": "Professional",
+        "intent": "Apologize"
+      },
+      "expected": "ok",
+      "factsToReview": [
+        "missed",
+        "calendar",
+        "reschedule"
+      ],
+      "httpStatus": 200,
+      "resolvedModel": "nvidia/nemotron-3-super-120b-a12b:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "I apologize for missing our call; I neglected to check my calendar. Could we please reschedule?",
+        "explanation": "Replaced the informal apology with a more formal one and adjusted the request for a professional tone."
+      },
+      "semanticReview": "Agent review: the missed call, failure to check the calendar, and rescheduling request are retained with a professional apology."
+    },
+    {
+      "name": "uncertain commitment",
+      "input": {
+        "draft": "I might finish by Monday, but I cannot promise that yet.",
+        "tone": "Friendly",
+        "intent": "Keep original"
+      },
+      "expected": "ok",
+      "factsToReview": [
+        "might",
+        "Monday",
+        "cannot promise"
+      ],
+      "httpStatus": 200,
+      "resolvedModel": "dots-studio/dots-3-note-preview:free",
+      "output": {
+        "status": "ok",
+        "rewrite": "I might finish by Monday, but I can't promise that yet.",
+        "explanation": "Changed 'cannot' to 'can't' for a more conversational tone."
+      },
+      "semanticReview": "Agent review: might, Monday, and the absence of a promise are preserved; cannot is contracted to can’t."
+    },
+    {
+      "name": "conflicting intent",
+      "input": {
+        "draft": "I accept your invitation and will attend on Friday.",
+        "tone": "Firm",
+        "intent": "Decline"
+      },
+      "expected": "needs_clarification",
+      "factsToReview": [],
+      "httpStatus": 200,
+      "resolvedModel": "nvidia/nemotron-3-super-120b-a12b:free",
+      "output": {
+        "status": "needs_clarification",
+        "question": "Would you like me to rewrite the message to decline the invitation instead of accepting it?"
+      },
+      "semanticReview": "Agent review: asks for confirmation instead of silently changing an acceptance into a refusal."
+    }
+  ],
+  "followUp": {
+    "name": "amount and firm deadline",
+    "change": "Low reasoning effort and 4,000 total token budget; more specific explanation instruction.",
+    "httpStatus": 200,
+    "resolvedModel": "apodex/apodex-1.1-mini:free",
+    "output": {
+      "status": "ok",
+      "rewrite": "Please settle the outstanding ₹2,400 by Friday. I cannot extend the deadline.",
+      "explanation": "Changed 'pay the remaining' to 'settle the outstanding' for clearer billing language while retaining the amount, Friday deadline, and no-extension limit."
+    },
+    "semanticReview": "Agent review: ₹2,400, Friday, and the no-extension limit are preserved. Explanation correctly identifies the billing-wording change. Different resolved model; not proof of universal reliability."
+  },
+  "liveBrowserJourney": {
+    "httpStatus": 200,
+    "model": "dots-studio/dots-3-note-preview:free",
+    "result": {
+      "status": "ok",
+      "rewrite": "Hi Alex, I'm following up on the project file. Could you please send it by 3 PM today so I can finish the review?",
+      "explanation": "Rephrased to use a more courteous and direct follow-up phrase, softening the accusation by focusing on the request."
+    },
+    "runtimeErrors": [],
+    "copyVerified": true,
+    "semanticReview": "Agent review: Alex, the project file, 3 PM today, and the review purpose are preserved. The edited output was copied in the real browser journey."
+  }
+}

@@ -241,3 +241,28 @@ test("real local endpoint reports missing credentials instead of sample output",
   expect(body.error.code).toBe("configuration");
   expect(body.error.message).toContain("API key");
 });
+
+test("unexpected transport content gives a readable error instead of technical details", async ({
+  page,
+}) => {
+  await page.route("**/api/rewrite", (route) =>
+    route.fulfill({
+      status: 502,
+      contentType: "text/html",
+      body: "<html>private upstream details</html>",
+    }),
+  );
+  await page.goto("/");
+  await page
+    .getByLabel("Your message", { exact: true })
+    .fill("Please send the file today.");
+  await page.getByRole("button", { name: "Make over my message" }).click();
+  const alert = page
+    .getByRole("region", { name: "What would you like to say?" })
+    .getByRole("alert");
+  await expect(alert).toContainText("We couldn’t read the response");
+  await expect(alert).not.toContainText("upstream details");
+  await expect(page.getByLabel("Your message", { exact: true })).toHaveValue(
+    "Please send the file today.",
+  );
+});

@@ -50,6 +50,8 @@ describe("POST /api/rewrite and provider adapter", () => {
     const body = JSON.parse(options.body);
     expect(body.model).toBe("openrouter/free");
     expect(body.stream).toBe(false);
+    expect(body.reasoning).toEqual({ effort: "low", exclude: true });
+    expect(body.max_tokens).toBe(4_000);
     expect(body.response_format).toEqual({ type: "json_object" });
     expect(body.messages).toEqual([
       { role: "system", content: REWRITE_PROMPT },
@@ -117,13 +119,11 @@ describe("POST /api/rewrite and provider adapter", () => {
     async (providerStatus, status, code) => {
       vi.stubGlobal(
         "fetch",
-        vi
-          .fn()
-          .mockResolvedValue(
-            new Response("provider-secret-and-private-draft", {
-              status: providerStatus as number,
-            }),
-          ),
+        vi.fn().mockResolvedValue(
+          new Response("provider-secret-and-private-draft", {
+            status: providerStatus as number,
+          }),
+        ),
       );
       const response = await POST(request());
       expect(response.status).toBe(status);
@@ -147,18 +147,16 @@ describe("POST /api/rewrite and provider adapter", () => {
   it("rejects truncated generation even when content parses", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue(
-          completion(undefined, {
-            choices: [
-              {
-                message: { content: JSON.stringify(result) },
-                finish_reason: "length",
-              },
-            ],
-          }),
-        ),
+      vi.fn().mockResolvedValue(
+        completion(undefined, {
+          choices: [
+            {
+              message: { content: JSON.stringify(result) },
+              finish_reason: "length",
+            },
+          ],
+        }),
+      ),
     );
     expect((await POST(request())).status).toBe(502);
   });
