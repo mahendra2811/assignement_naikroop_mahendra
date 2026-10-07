@@ -1,0 +1,28 @@
+the problem statement and assignment details below.
+
+Problem Statement
+
+Visit https://naikroop.com/ and https://naikflow.com/ and research our product, NaikFlow, to understand its vision, capabilities, and the problems it aims to solve.
+
+Based on your understanding of Naikflow and your own imagination, design and build an application using any tools, technologies, or AI platforms of your choice.
+
+The objective of this assignment is not to evaluate your expertise in a specific technology or tool.
+Instead, we want to understand:
+
+Your imagination and creativity
+Your problem-solving approach
+Your product thinking and understanding of user needs
+How effectively you leverage AI throughout the development process
+Your ability to follow an AI-Native SDLC, using AI across ideation, planning, design, development, testing, debugging, documentation, and iteration
+Your ability to turn an idea into a working application
+Your overall strategy, decision-making, and execution
+You are free to choose the problem, application concept, user experience, technology stack, AI tools, and development approach based on your own ideas.
+
+There is no single correct solution. We are interested in seeing how you think, how you use AI and available tools, and how effectively you turn an idea into a working product.
+
+Key Expectation
+
+Follow an AI-Native SDLC throughout the assignment. We encourage you to demonstrate how AI is integrated into your development workflow—not merely for writing code, but as a partner across the entire product development lifecycle.
+
+ 
+
